@@ -31,11 +31,11 @@ class PrivateKeyInput extends React.Component {
                             onChange={this.handleChange}
                             id="inputKey"
                             class='form-control'
-                        />                        
+                        />
                     </div>
                     <button type='button' class="btn btn-primary" onClick={() => this.props.reloadAddress(privateKey)}>Set</button>
-                </form>                
-            </div>            
+                </form>
+            </div>
         );
     }
 }
@@ -49,24 +49,35 @@ class KeyAndAddress extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            privateKey: ''
+            privateKey: '',
+            address: ''
         };
     }
 
     reloadAddress = (key) => {
-        this.setState({
-            privateKey: key
-        });
-        this.props.propagateKey(key);
+        let account;
+        try {
+            account = caver.klay.accounts.privateKeyToAccount(key);
+        } catch (e) {
+            console.error(e);
+        }
+        if (account) {
+            this.setState({
+                privateKey: key,
+                address: account.address
+            });
+            this.props.propagateKey(key);
+        } else {
+            this.setState({
+                privateKey: '',
+                address: ''
+            });
+            this.props.propagateKey(false);
+        }
     }
 
     render() {
-        let account = { address: "not_set" }
-        const { privateKey } = this.state;
-        if (privateKey) {
-            account = caver.klay.accounts.privateKeyToAccount(privateKey);
-        }
-
+        const { address } = this.state;
         return (
             <div>
                 <PrivateKeyInput reloadAddress={this.reloadAddress} />
@@ -74,12 +85,12 @@ class KeyAndAddress extends React.Component {
                 <form>
                     <div class='form-group'>
                         <label for='addressField'>My Address</label>
-                        <input 
+                        <input
                             id='addressField'
-                            type='text' 
+                            type='text'
                             class='form-control'
                             disabled
-                            value={account.address}
+                            value={address}
                         />
                     </div>
                 </form>
