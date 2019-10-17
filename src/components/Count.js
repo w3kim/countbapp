@@ -29,7 +29,9 @@ class Count extends React.Component {
     // exposed function
     setPrivateKey(key) {
         this.wallet.clear();
-        this.wallet.add(key);
+        if (key) {
+            this.wallet.add(key);
+        }        
         this.setState({
             privateKey: key
         });
