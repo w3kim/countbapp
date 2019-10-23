@@ -27,13 +27,12 @@ class PrivateKeyInput extends React.Component {
                         <input
                             type='text'
                             placeholder="your private key starting with 0x"
-                            value={this.state.privateKey}
                             onChange={this.handleChange}
                             id="inputKey"
                             class='form-control'
                         />
                     </div>
-                    <button type='button' class="btn btn-primary" onClick={() => this.props.reloadAddress(privateKey)}>Set</button>
+                    <button type='button' class="btn btn-primary" onClick={() => this.props.export(privateKey)}>Set</button>
                 </form>
             </div>
         );
@@ -80,7 +79,7 @@ class KeyAndAddress extends React.Component {
         const { address } = this.state;
         return (
             <div>
-                <PrivateKeyInput reloadAddress={this.reloadAddress} />
+                <PrivateKeyInput export={this.reloadAddress} />
                 <hr />
                 <form>
                     <div class='form-group'>
